@@ -98,8 +98,12 @@ public class TestCases extends ExcelDataProvider{ // Lets us read the data
                         Wrappers.click(driver, about);
 
                         wait.until(ExpectedConditions.visibilityOf(abouttext));
+                    if (abouttext.isDisplayed()) {
                         String aboutsectiontext = abouttext.getText();
-                        System.out.println("Message on About us Page : " +aboutsectiontext);
+                        System.out.println("Message on About us Page : " + aboutsectiontext);
+                    } else {
+                        System.out.println("About section text not visible!");
+                    }
 
 
                 }catch (Exception e){
