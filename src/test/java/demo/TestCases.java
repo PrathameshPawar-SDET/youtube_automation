@@ -30,10 +30,11 @@ import demo.wrappers.Wrappers;
 public class TestCases extends ExcelDataProvider{ // Lets us read the data
         WebDriver driver;
 
-        @FindBy(xpath = "//div[@id=\"guide-links-primary\"]//a[text()='About']")
+        @FindBy(xpath = "//div[@id='guide-links-primary']//a[text()='About']")
         private WebElement about;
 
-        @FindBy(css = "section:nth-child(1) > p:nth-child(2)")
+//        @FindBy(css = "section:nth-child(1) > p:nth-child(2)")
+        @FindBy(xpath = "//section[@class='ytabout__content']/h1")
         private  WebElement abouttext;
 
         @FindBy(xpath = "//yt-formatted-string[normalize-space()='Movies']")
@@ -84,35 +85,36 @@ public class TestCases extends ExcelDataProvider{ // Lets us read the data
          * instructions
          */
 
-        @Test(enabled = true)
-        public void testCase01(){
-                System.out.println("Starting with testCase 01");
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    @Test(enabled = true)
+    public void testCase01() {
+        System.out.println("Starting with testCase 01");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
+        driver.get("https://www.youtube.com/");
 
-                driver.get("https://www.youtube.com/");
+        SoftAssert SA = new SoftAssert();
+        SA.assertEquals(driver.getCurrentUrl(), "https://www.youtube.com/", "URL Did Not Match!");
 
-                SoftAssert SA = new SoftAssert();
-                SA.assertEquals(driver.getCurrentUrl(),"https://www.youtube.com/","URL Did Not Match!");
-                try{
-                        Wrappers.click(driver, about);
+        try {
+            Wrappers.click(driver, about);
+            wait.until(ExpectedConditions.visibilityOf(abouttext));
 
-                        wait.until(ExpectedConditions.visibilityOf(abouttext));
-                    if (abouttext.isDisplayed()) {
-                        String aboutsectiontext = abouttext.getText();
-                        System.out.println("Message on About us Page : " + aboutsectiontext);
-                    } else {
-                        System.out.println("About section text not visible!");
-                    }
-
-
-                }catch (Exception e){
-                        e.printStackTrace();
-                }
-
-                SA.assertAll();
-
+            if (abouttext.isDisplayed()) {
+                String aboutsectiontext = abouttext.getText();
+                System.out.println("Message on About us Page : " + aboutsectiontext);
+                // Add an assertion for the content of the about section
+                SA.assertTrue(!aboutsectiontext.isEmpty(), "About section text is empty!");
+            } else {
+                System.out.println("About section text not visible!");
+                SA.fail("About section text is not visible.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            SA.fail("An exception occurred during the test: " + e.getMessage());
         }
+
+        SA.assertAll(); // This is crucial to trigger the evaluation of all assertions
+    }
 
         @Test(enabled = true)
         public void testCase02(){
