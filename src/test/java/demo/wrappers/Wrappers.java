@@ -53,4 +53,19 @@ public class Wrappers {
         return false;
 
     }
+
+
+    public static int convertLikesToNumber(String likesText) {
+        likesText = likesText.toLowerCase().replaceAll("[^0-9kmb.]", "");
+
+        if (likesText.endsWith("k")) {
+            return (int) (Double.parseDouble(likesText.replace("k", "")) * 1000);
+        } else if (likesText.endsWith("m")) {
+            return (int) (Double.parseDouble(likesText.replace("m", "")) * 1000000);
+        } else if (likesText.endsWith("b")) {
+            return (int) (Double.parseDouble(likesText.replace("b", "")) * 1000000000);
+        } else {
+            return Integer.parseInt(likesText);
+        }
+    }
 }
